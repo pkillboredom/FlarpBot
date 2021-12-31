@@ -10,3 +10,5 @@ This solution depends on:
 - [Discord.Net](https://www.nuget.org/packages/Discord.Net/)
 - [NLog](https://nlog-project.org/)
 - A variety of Microsoft extension packages.
+
+See also: [Flarp-Bot-Plugin](https://github.com/pkillboredom/Flarp-Bot-Plugin)
