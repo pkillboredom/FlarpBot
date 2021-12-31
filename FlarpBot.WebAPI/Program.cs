@@ -1,3 +1,4 @@
+using FlarpBot.Bot;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,7 @@ namespace FlarpBot.WebAPI
                 logger.Debug("init main");
                 var host = CreateHostBuilder(args).Build();
 
-                _ = host.Services.GetRequiredService<Discord_Bot.DiscordBot>().MainAsync();
+                _ = host.Services.GetRequiredService<DiscordBot>().MainAsync();
                 host.Run();
             }
             catch (Exception exception)

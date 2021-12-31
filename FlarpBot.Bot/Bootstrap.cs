@@ -1,15 +1,14 @@
-﻿using System;
-using Discord;
-using Discord.WebSocket;
+﻿using Discord;
 using Discord.Commands;
-using Microsoft.Extensions.DependencyInjection;
+using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
-using System.IO;
-using Microsoft.Extensions.Logging;
-using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using System;
+using System.IO;
+using System.Reflection;
 
-namespace Discord_Bot
+namespace FlarpBot.Bot
 {
     public static class Bootstrap
     {
@@ -39,6 +38,7 @@ namespace Discord_Bot
                     }))
                     .AddSingleton<CommandHandlingService>()
                     .AddSingleton<Functions>()
+                    .AddSingleton<ExternalRequestHandler>()
                     //.AddSingleton(typeof(Modules.MinecraftModule.MinecraftUtil))
                     .BuildServiceProvider();
 
@@ -53,6 +53,6 @@ namespace Discord_Bot
 
         }
 
-        
+
     }
 }

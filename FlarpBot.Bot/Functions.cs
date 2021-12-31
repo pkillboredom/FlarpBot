@@ -2,13 +2,10 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
-namespace Discord_Bot
+namespace FlarpBot.Bot
 {
     public class Functions
     {
@@ -55,7 +52,7 @@ namespace Discord_Bot
 
                 await client.SetGameAsync(statusText, type: activity);
                 Console.WriteLine($"{DateTime.Now.TimeOfDay:hh\\:mm\\:ss} | Playing status set | {activity}: {statusText}");
-            }            
+            }
         }
 
         public IConfiguration GetConfig()
@@ -66,7 +63,7 @@ namespace Discord_Bot
         public string GetAvatarUrl(SocketUser user, ushort size = 1024)
         {
             // Get user avatar and resize it. If the user has no avatar, get the default Discord avatar.
-            return user.GetAvatarUrl(size: size) ?? user.GetDefaultAvatarUrl(); 
+            return user.GetAvatarUrl(size: size) ?? user.GetDefaultAvatarUrl();
         }
     }
 }

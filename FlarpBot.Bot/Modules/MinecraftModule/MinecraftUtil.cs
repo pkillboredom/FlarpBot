@@ -1,16 +1,13 @@
-﻿using Discord_Bot.Modules.MinecraftModule.Models;
+﻿using FlarpBot.Bot.Modules.MinecraftModule.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MineStatLib;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Discord_Bot.Modules.MinecraftModule
+namespace FlarpBot.Bot.Modules.MinecraftModule
 {
     internal class MinecraftUtil
     {

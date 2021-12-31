@@ -1,19 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FlarpBot;
-using NLog.Extensions.Logging;
 using NLog;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace FlarpBot.WebAPI
 {
@@ -38,7 +32,7 @@ namespace FlarpBot.WebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Flarp-Bot", Version = "v1" });
             });
 
-            var flarpbot = Discord_Bot.Bootstrap.CreateDiscordBot();
+            var flarpbot = FlarpBot.Bot.Bootstrap.CreateDiscordBot();
             services.AddSingleton(flarpbot);
         }
 
@@ -49,7 +43,7 @@ namespace FlarpBot.WebAPI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flarp-Bot v1"));
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();

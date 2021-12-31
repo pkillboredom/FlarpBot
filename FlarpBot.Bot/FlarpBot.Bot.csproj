@@ -3,21 +3,21 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Discord_Bot</RootNamespace>
+    <RootNamespace>FlarpBot.Bot</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Samples\FunSample.cs" />
     <Compile Remove="Samples\ModSample.cs" />
     <Compile Remove="Samples\UtilitySample.cs" />
-    <Compile Remove="src\Modules\Minecraft.cs" />
+    <Compile Remove="Modules\Minecraft.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Samples\FunSample.cs" />
     <None Include="Samples\ModSample.cs" />
     <None Include="Samples\UtilitySample.cs" />
-    <None Include="src\Modules\MinecraftModule\Minecraft.cs" />
+    <None Include="Modules\MinecraftModule\Minecraft.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Newtonsoft.Json.Linq;
-using Discord;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Reflection;
+using System.Threading.Tasks;
 
-namespace Discord_Bot
+namespace FlarpBot.Bot
 {
     public class CommandHandlingService
     {
@@ -42,7 +40,7 @@ namespace Discord_Bot
             int argPos = 0;
 
             var config = _functions.GetConfig();
-            string prefix = (config["prefix"]);
+            string prefix = config["prefix"];
 
             // Check if message has any of the prefixes or mentiones the bot.
             if (message.HasStringPrefix(prefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
@@ -50,8 +48,8 @@ namespace Discord_Bot
                 // Execute the command.
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
 
-                if (!result.IsSuccess && result.Error.HasValue)          
-                    await context.Channel.SendMessageAsync($":x: {result.ErrorReason}");          
+                if (!result.IsSuccess && result.Error.HasValue)
+                    await context.Channel.SendMessageAsync($":x: {result.ErrorReason}");
             }
         }
 
@@ -65,7 +63,7 @@ namespace Discord_Bot
 
             // Send the join message in the first channel where the bot can send messsages.
             foreach (var channel in guild.TextChannels.OrderBy(x => x.Position))
-            {                               
+            {
                 var botPerms = channel.GetPermissionOverwrite(_client.CurrentUser).GetValueOrDefault();
 
                 if (botPerms.SendMessages == PermValue.Deny)
@@ -76,8 +74,8 @@ namespace Discord_Bot
                     await channel.SendMessageAsync(joinMessage);
                     return;
                 }
-                catch 
-                { 
+                catch
+                {
                     continue;
                 }
             }

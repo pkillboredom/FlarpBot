@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Discord_Bot.Modules.MinecraftModule.Models
+﻿namespace FlarpBot.Bot.Modules.MinecraftModule.Models
 {
     internal class MinecraftServerStatus
     {

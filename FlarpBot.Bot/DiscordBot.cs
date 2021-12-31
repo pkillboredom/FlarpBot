@@ -3,14 +3,11 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Discord_Bot
+namespace FlarpBot.Bot
 {
     public class DiscordBot
     {
@@ -43,6 +40,12 @@ namespace Discord_Bot
             // Run the bot forever.
             await Task.Delay(-1);
         }
+
+        public ExternalRequestHandler GetExternalRequestHandler()
+        {
+            return serviceProvider.GetRequiredService<ExternalRequestHandler>();
+        }
+
         private Task Log(LogMessage log)
         {
             logger.Info(log.Message);
