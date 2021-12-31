@@ -20,24 +20,43 @@ namespace FlarpBot.Bot
         {
             var client = serviceProvider.GetRequiredService<Discord.WebSocket.DiscordSocketClient>();
 
-            var guild = client.GetGuild(request.GuildId);
+            ulong u_guildId = Convert.ToUInt64(request.GuildId);
+
+            var guild = client.GetGuild(u_guildId);
             if (guild == null)
             {
                 return new ExternalRequestHandlerResponse()
                 {
                     RequestId = request.RequestId,
-                    RequestStatus = RequestStatus.Error,
+                    RequestStatus = "Error",
                     RequestMessage = "The guild/server specified did not exist or was unauthorized."
                 };
             }
 
-            var channel = guild.GetTextChannel(request.ChannelId);
+            //SocketGuild guild;
+            //try
+            //{
+            //    guild = client.Guilds.Single(g => g.Id == request.GuildId);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return new ExternalRequestHandlerResponse()
+            //    {
+            //        RequestId = request.RequestId,
+            //        RequestStatus = "Error",
+            //        RequestMessage = "The guild/server specified could not be found."
+            //    };
+            //}
+
+            ulong u_channelId = Convert.ToUInt64(request.ChannelId);
+
+            var channel = guild.GetTextChannel(u_channelId);
             if (channel == null)
             {
                 return new ExternalRequestHandlerResponse()
                 {
                     RequestId = request.RequestId,
-                    RequestStatus = RequestStatus.Error,
+                    RequestStatus = "Error",
                     RequestMessage = "The channel specified did not exist or was unauthorized."
                 };
             }
@@ -48,7 +67,7 @@ namespace FlarpBot.Bot
                 return new ExternalRequestHandlerResponse()
                 {
                     RequestId = request.RequestId,
-                    RequestStatus = RequestStatus.Error,
+                    RequestStatus = "Error",
                     RequestMessage = "There was an error retrieving the sent message. It may have failed."
                 };
             }
@@ -57,7 +76,7 @@ namespace FlarpBot.Bot
                 return new ExternalRequestHandlerResponse()
                 {
                     RequestId = request.RequestId,
-                    RequestStatus = RequestStatus.Success,
+                    RequestStatus = "Success",
                     RequestMessage = $"Success: {message.Id}"
                 };
             }
