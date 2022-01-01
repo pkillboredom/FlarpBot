@@ -17,8 +17,16 @@ namespace FlarpBot.Bot
             var logger = LogManager.GetCurrentClassLogger();
             try
             {
+                string directory;
+                if (string.IsNullOrWhiteSpace(Assembly.GetEntryAssembly().Location))
+                {
+                    // Quick fix for publish build.
+                    directory = Directory.GetCurrentDirectory();
+                }
+                else directory = Directory.GetParent(Assembly.GetEntryAssembly().Location).ToString();
+
                 var configBuilder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetParent(Assembly.GetEntryAssembly().Location).ToString())
+                    .SetBasePath(directory)
                     .AddJsonFile("config.json", optional: false);
 
                 IConfiguration config = configBuilder.Build();
