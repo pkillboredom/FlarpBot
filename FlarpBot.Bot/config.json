@@ -11,5 +11,8 @@
   "minecraft": {
     "host": "IP OR DOMAIN",
     "port": "25565"
+  },
+  "gmod": {
+    "combatLogPath": "PATH to log directory"
   }
 }
