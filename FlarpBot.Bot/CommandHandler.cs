@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,7 @@ namespace FlarpBot.Bot
         private readonly DiscordSocketClient _client;
         private readonly IServiceProvider _services;
         private readonly Functions _functions;
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public CommandHandlingService(IServiceProvider services)
         {
@@ -32,24 +34,31 @@ namespace FlarpBot.Bot
 
         private async Task HandleCommandAsync(SocketMessage rawMessage)
         {
-            if (rawMessage.Author.IsBot || !(rawMessage is SocketUserMessage message) || message.Channel is IDMChannel)
-                return;
-
-            var context = new SocketCommandContext(_client, message);
-
-            int argPos = 0;
-
-            var config = _functions.GetConfig();
-            string prefix = config["prefix"];
-
-            // Check if message has any of the prefixes or mentiones the bot.
-            if (message.HasStringPrefix(prefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            try
             {
-                // Execute the command.
-                var result = await _commands.ExecuteAsync(context, argPos, _services);
+                if (rawMessage.Author.IsBot || !(rawMessage is SocketUserMessage message) || message.Channel is IDMChannel)
+                    return;
 
-                if (!result.IsSuccess && result.Error.HasValue)
-                    await context.Channel.SendMessageAsync($":x: {result.ErrorReason}");
+                var context = new SocketCommandContext(_client, message);
+
+                int argPos = 0;
+
+                var config = _functions.GetConfig();
+                string prefix = config["prefix"];
+
+                // Check if message has any of the prefixes or mentiones the bot.
+                if (message.HasStringPrefix(prefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+                {
+                    // Execute the command.
+                    var result = await _commands.ExecuteAsync(context, argPos, _services);
+
+                    if (!result.IsSuccess && result.Error.HasValue)
+                        await context.Channel.SendMessageAsync($":x: {result.ErrorReason}");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
             }
         }
 
