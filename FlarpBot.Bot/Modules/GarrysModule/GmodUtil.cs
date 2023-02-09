@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FlarpBot.Bot.Modules.GarrysModule
@@ -15,6 +16,7 @@ namespace FlarpBot.Bot.Modules.GarrysModule
         private readonly IServiceProvider serviceProvider;
         private readonly IConfiguration config;
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Regex CombatLogRegex = new Regex(@"(?'Date'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3}): (?'Player'.*) \((?'PlayerKarma'[\d.]*)\) (?'Action'\S+) (?'Target'.*) \((?'TargetKarma'[\d.]*)\) and gets (?'PenaltyOrReward'\w+)[\D]*(?'PenaltyOrRewardAmount'[\d.]*)");
         public GmodUtil(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
@@ -40,8 +42,8 @@ namespace FlarpBot.Bot.Modules.GarrysModule
                     var line = reader.ReadLine();
                     while (line != null)
                     {
-                        // Ignore blank lines
-                        if (!string.IsNullOrWhiteSpace(line))
+                        // Ignore all but matching lines.
+                        if (CombatLogRegex.IsMatch(line))
                         {
                             if (count++ >= numLines)
                             {
