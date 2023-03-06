@@ -13,7 +13,7 @@ namespace FlarpBot.Bot.Modules.GarrysModule
     {
         private readonly IServiceProvider serviceProvider;
         private readonly GmodUtil gmodUtil;
-        private const long NickUID = 147094239623249920;
+        private const ulong NickUID = 147094239623249920;
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public Gmod(IServiceProvider serviceProvider)
