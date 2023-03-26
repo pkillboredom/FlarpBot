@@ -125,12 +125,14 @@ namespace FlarpBot.Bot.Modules.MediaModule
             // Create FFmpeg using the previous example
             try
             {
+                using (var discord = client.CreatePCMStream(AudioApplication.Mixed))
                 using (var ffmpeg = CreateStream(path))
                 using (var output = ffmpeg.StandardOutput.BaseStream)
-                using (var discord = client.CreatePCMStream(AudioApplication.Mixed))
                 {
                     try { await output.CopyToAsync(discord); }
-                    catch (Exception ex) { logger.Error(ex); }
+                    catch (Exception ex) { 
+                        logger.Error(ex);
+                    }
                     finally { 
                         await discord.FlushAsync();
                     }

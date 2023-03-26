@@ -13,6 +13,8 @@
     "port": "25565"
   },
   "gmod": {
-    "combatLogPath": "PATH to log directory"
+    "useLogFile": false,
+    "combatLogPath": "PATH to log directory",
+    "dashboardLogUrl": "URL TO TTT2StatsDashboard Here"
   }
 }
