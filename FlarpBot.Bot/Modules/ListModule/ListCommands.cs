@@ -55,18 +55,28 @@ namespace FlarpBot.Bot.Modules.MediaModule
         {
             foreach (var kv in CommandListDict)
             {
-                Random r = new Random();
-                builder = builder.AddCommand(kv.Key, async (context, unk, servProvider, commandInfo) => {
-                    var randomItem = kv.Value[r.Next(kv.Value.Length)];
-                    await externalRequestHandler.SayInChannel(new Models.SayInChannelRequest
+                try
+                {
+                    builder = builder.AddCommand(kv.Key, async (context, unk, servProvider, commandInfo) =>
                     {
-                        GuildId = context.Guild.Id.ToString(),
-                        ChannelId = context.Channel.Id.ToString(),
-                        RequestId = new Guid().ToString(),
-                        Message = randomItem
-                    });
-                    //await context.Message.DeleteAsync();
-                }, commandBuilder => { });
+                        logger.Info($"Command {kv.Key} called.");
+                        Random r = new Random();
+                        var randomItem = kv.Value[r.Next(kv.Value.Length)];
+                        await externalRequestHandler.SayInChannel(new Models.SayInChannelRequest
+                        {
+                            GuildId = context.Guild.Id.ToString(),
+                            ChannelId = context.Channel.Id.ToString(),
+                            RequestId = new Guid().ToString(),
+                            Message = randomItem
+                        });
+                        //await context.Message.DeleteAsync();
+                    }, commandBuilder => { });
+                }
+                catch (Exception ex)
+                {
+                    logger.ErrorException("Exception adding list command to module builder", ex);
+                    throw;
+                }
             }
             foreach (var kv in VoiceListDict)
             {
@@ -99,9 +109,11 @@ namespace FlarpBot.Bot.Modules.MediaModule
                             }
                             else
                             {
-                                var audioClient = await channel.ConnectAsync();
-                                await SendAsync(audioClient, randomItem);
-                                audioClient.Dispose();
+                                using (var audioClient = await channel.ConnectAsync())
+                                {
+                                    var sendTask = SendAsync(audioClient, randomItem);
+                                    await sendTask;
+                                }
                                 return;
                             }
                         }
@@ -125,16 +137,24 @@ namespace FlarpBot.Bot.Modules.MediaModule
             // Create FFmpeg using the previous example
             try
             {
+                CancellationTokenSource ctxSource = new CancellationTokenSource();
+                client.Disconnected += (ex =>
+                {
+                    ctxSource.Cancel();
+                    return Task.CompletedTask;
+                });
                 using (var discord = client.CreatePCMStream(AudioApplication.Mixed))
                 using (var ffmpeg = CreateStream(path))
                 using (var output = ffmpeg.StandardOutput.BaseStream)
                 {
-                    try { await output.CopyToAsync(discord); }
+                    try {
+                        await output.CopyToAsync(discord, ctxSource.Token);
+                    }
                     catch (Exception ex) { 
                         logger.Error(ex);
                     }
                     finally { 
-                        await discord.FlushAsync();
+                        await discord.FlushAsync(ctxSource.Token);
                     }
                 }
             }
@@ -143,6 +163,7 @@ namespace FlarpBot.Bot.Modules.MediaModule
                 logger.Error(ex);
             }
         }
+
 
         private Process CreateStream(string path)
         {

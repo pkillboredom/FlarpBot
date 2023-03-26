@@ -16,5 +16,14 @@
     "useLogFile": false,
     "combatLogPath": "PATH to log directory",
     "dashboardLogUrl": "URL TO TTT2StatsDashboard Here"
-  }
+  },
+  "ListCommands": {
+    
+  },
+  "VoiceCommands": {
+    
+  },
+  "VoiceDirs": [
+    
+  ]
 }
