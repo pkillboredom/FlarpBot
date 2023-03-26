@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <None Update="config.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="libopus.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
