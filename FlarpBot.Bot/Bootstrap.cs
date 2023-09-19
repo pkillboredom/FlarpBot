@@ -31,6 +31,7 @@ namespace FlarpBot.Bot
                     .AddSingleton(configuration)
                     .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
                     {
+                        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates,
                         MessageCacheSize = 500,
                         LogLevel = LogSeverity.Info
                     }))
