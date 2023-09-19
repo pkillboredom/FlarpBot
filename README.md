@@ -4,11 +4,11 @@ The bot portion is based in part on [Discord-Bot-Csharp by VACEfron](https://git
 
 This solution depends on:
 
-- .NET 6
-- ASP.NET Core 6
+- .NET 7
+- ASP.NET Core 7
 - Visual Studio 2022
 - [Discord.Net](https://www.nuget.org/packages/Discord.Net/)
 - [NLog](https://nlog-project.org/)
-- A variety of Microsoft extension packages.
+- [EasyCaching](https://github.com/dotnetcore/EasyCaching)
 
 See also: [Flarp-Bot-Plugin](https://github.com/pkillboredom/Flarp-Bot-Plugin)
