@@ -179,7 +179,11 @@ namespace FlarpBot.Bot.Modules.MediaModule
         private void LoadImageURLLists()
         {
             CommandListDict = new Dictionary<string, string[]>();
-            var CommandDict = configuration.GetSection("ListCommands").Get<Dictionary<string, string>>();
+            var CommandDict = configuration.GetSection("ListCommands")?.Get<Dictionary<string, string>>();
+            if (CommandDict == null)
+            {
+                return;
+            }
             foreach (var commandListPathPair in CommandDict)
             {
                 var urlList = File.ReadAllLines(commandListPathPair.Value);
@@ -190,7 +194,11 @@ namespace FlarpBot.Bot.Modules.MediaModule
         private void LoadVoicePathLists()
         {
             VoiceListDict = new Dictionary<string, string[]>();
-            var CommandDict = configuration.GetSection("VoiceCommands").Get<Dictionary<string, string>>();
+            var CommandDict = configuration.GetSection("VoiceCommands")?.Get<Dictionary<string, string>>();
+            if (CommandDict == null)
+            {
+                return;
+            }
             foreach (var commandListPathPair in CommandDict)
             {
                 var pathList = File.ReadAllLines(commandListPathPair.Value);

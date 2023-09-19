@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using FlarpBot.Bot.Modules.VolumeModule;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using System;
@@ -17,6 +18,7 @@ namespace FlarpBot.Bot
         private readonly IServiceProvider _services;
         private readonly Functions _functions;
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly VolumeAnalyzer _volumeAnalyzer;
 
         public CommandHandlingService(IServiceProvider services)
         {
@@ -25,6 +27,7 @@ namespace FlarpBot.Bot
             _client = services.GetRequiredService<DiscordSocketClient>();
             _services = services;
             _functions = services.GetRequiredService<Functions>();
+            _volumeAnalyzer = services.GetRequiredService<VolumeAnalyzer>();
 
             // Event handlers
             _client.Ready += ClientReadyAsync;
@@ -54,6 +57,10 @@ namespace FlarpBot.Bot
 
                     if (!result.IsSuccess && result.Error.HasValue)
                         await context.Channel.SendMessageAsync($":x: {result.ErrorReason}");
+                }
+                else
+                {
+                    await _volumeAnalyzer.AnalyzeFromMessage(message, false, context.Guild.Id);
                 }
             }
             catch (Exception ex)

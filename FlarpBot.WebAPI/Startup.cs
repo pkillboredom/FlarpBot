@@ -1,10 +1,13 @@
+using FlarpBot.Bot.Modules.VolumeModule;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NLog;
+using NLog.Extensions.Logging;
 using System;
 using System.IO;
 using System.Reflection;
@@ -32,7 +35,7 @@ namespace FlarpBot.WebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Flarp-Bot", Version = "v1" });
             });
 
-            var flarpbot = FlarpBot.Bot.Bootstrap.CreateDiscordBot();
+            var flarpbot = FlarpBot.Bot.Bootstrap.CreateDiscordBot(Configuration);
             services.AddSingleton(flarpbot);
         }
 

@@ -480,3 +480,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 wwwroot/
+/FlarpBot.WebAPI/appsettings.Development.json

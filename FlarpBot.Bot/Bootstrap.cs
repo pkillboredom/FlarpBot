@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using FlarpBot.Bot.Modules.VolumeModule;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using NLog.Extensions.Logging;
 using System;
 using System.IO;
 using System.Reflection;
@@ -12,7 +14,7 @@ namespace FlarpBot.Bot
 {
     public static class Bootstrap
     {
-        public static DiscordBot CreateDiscordBot()
+        public static DiscordBot CreateDiscordBot(IConfiguration configuration)
         {
             var logger = LogManager.GetCurrentClassLogger();
             try
@@ -25,14 +27,8 @@ namespace FlarpBot.Bot
                 }
                 else directory = Directory.GetParent(Assembly.GetEntryAssembly().Location).ToString();
 
-                var configBuilder = new ConfigurationBuilder()
-                    .SetBasePath(directory)
-                    .AddJsonFile("config.json", optional: false);
-
-                IConfiguration config = configBuilder.Build();
-
                 var services = new ServiceCollection()
-                    .AddSingleton(config)
+                    .AddSingleton(configuration)
                     .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
                     {
                         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates,
@@ -49,6 +45,21 @@ namespace FlarpBot.Bot
                     .AddSingleton<Functions>()
                     .AddSingleton<ExternalRequestHandler>()
                     //.AddSingleton(typeof(Modules.MinecraftModule.MinecraftUtil))
+                    .AddLogging(loggingBuilder => loggingBuilder.AddNLog("nlog.config"))
+                    .AddHttpClient()
+                    .AddEasyCaching(options =>
+                    {
+                        options.UseSQLite(config =>
+                        {
+                            config.DBConfig = new EasyCaching.SQLite.SQLiteDBOptions
+                            {
+                                FileName = Path.Combine(directory, "VolumeAnalyzerCache.db"),
+                                CacheMode = Microsoft.Data.Sqlite.SqliteCacheMode.Default,
+                                OpenMode = Microsoft.Data.Sqlite.SqliteOpenMode.ReadWriteCreate
+                            };
+                        }, "VolumeAnalyzerCache");
+                    })
+                    .AddTransient<VolumeAnalyzer>()
                     .BuildServiceProvider();
 
                 return new DiscordBot(services);
